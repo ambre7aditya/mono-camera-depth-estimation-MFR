@@ -1,0 +1,16 @@
+description: "Team-provided homography matrix. Validation pending."
+coordinate_frame:
+  unit: "unknown"
+  x: "unknown"
+  y: "unknown"
+notes:
+  - "Need to confirm whether output is metric X/Y or BEV image pixels."
+  - "Do not use for final pipeline until validated."
+
+H_img_to_world:
+  - [-0.512202121, -1.54322215, 668.678199]
+  - [-0.119343757, -7.07587855, 2001.70663]
+  - [-0.0000995, -0.00438938152, 1.0]
+
+image_points: []
+world_points: []

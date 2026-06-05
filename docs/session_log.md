@@ -62,3 +62,27 @@ Results using temporary manual homography:
 
 Interpretation:
 The lateral position estimate is consistent, but forward distance has significant scale error due to approximate manual calibration. These results are a pipeline sanity check, not final accuracy.
+
+## Accuracy baseline: manual homography
+
+The live/offline monocular cone projection pipeline was validated against the existing stereo cone perception output.
+
+Configuration:
+- Homography: config/homography_manual.yaml
+- ROI: enlarged manual ROI
+- Reference: /stereo_cone_perception/cones
+- Input detections: /stereo_cone_perception/bounding_boxes
+
+Results:
+- Projected mono cones: 4743
+- Matched mono/stereo cones: 4592
+- Match rate: 96.8%
+- Mean 2D error: 0.894 m
+- Median 2D error: 0.872 m
+- 95th percentile 2D error: 1.684 m
+- RMSE 2D error: 1.027 m
+- Mean absolute X error: 0.814 m
+- Mean absolute Y error: 0.185 m
+
+Interpretation:
+The full monocular pipeline works on the real rosbag. The main error source is forward distance X, which is expected because the current homography was created from manually guessed world coordinates.

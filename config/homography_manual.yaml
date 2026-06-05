@@ -14,14 +14,14 @@ coordinate_frame:
   y: left from car
 description: Temporary manual homography for learning only. Not final calibration.
 image_points:
-- - 301.0
-  - 452.0
-- - 952.0
-  - 437.0
-- - 766.0
-  - 299.0
-- - 520.0
-  - 301.0
+- - 180
+  - 520
+- - 1100
+  - 520
+- - 880
+  - 260
+- - 400
+  - 260
 world_points:
 - - 1.0
   - 1.5

@@ -1,0 +1,28 @@
+# ArUco marker layout for homography calibration
+# Coordinate convention:
+# X = forward from car, meters
+# Y = left from car, meters
+# Z = up, meters
+#
+# These are example values for now.
+# Replace them with real measured positions when markers are placed on the ground.
+
+aruco_dictionary: DICT_4X4_50
+marker_size_m: 0.20
+
+markers:
+  0:
+    center: [1.0, 1.0]
+    yaw_deg: 0.0
+
+  1:
+    center: [1.0, -1.0]
+    yaw_deg: 0.0
+
+  2:
+    center: [4.0, -1.0]
+    yaw_deg: 0.0
+
+  3:
+    center: [4.0, 1.0]
+    yaw_deg: 0.0
