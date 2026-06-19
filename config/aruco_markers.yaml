@@ -1,28 +1,34 @@
-# ArUco marker layout for homography calibration
-# Coordinate convention:
-# X = forward from car, meters
-# Y = left from car, meters
-# Z = up, meters
+# Team ArUco marker layout
+# Unit: meters
 #
-# These are example values for now.
-# Replace them with real measured positions when markers are placed on the ground.
+# This layout is converted from the team leader's mm coordinates:
+# ID 1 top-left: [0.00, 0.00]
+# ID 2 top-left: [2.75, 0.00]
+# ID 0 top-left: [0.00, 0.71]
+# ID 3 top-left: [2.75, 0.71]
+#
+# Marker size = 0.20 m
+# Therefore marker center = top-left + [0.10, 0.10]
+#
+# Coordinate frame:
+# This is currently the ArUco layout frame, not necessarily the vehicle frame.
 
 aruco_dictionary: DICT_4X4_50
 marker_size_m: 0.20
 
 markers:
-  0:
-    center: [1.0, 1.0]
-    yaw_deg: 0.0
-
   1:
-    center: [1.0, -1.0]
+    center: [0.10, 0.10]
     yaw_deg: 0.0
 
   2:
-    center: [4.0, -1.0]
+    center: [2.85, 0.10]
+    yaw_deg: 0.0
+
+  0:
+    center: [0.10, 0.81]
     yaw_deg: 0.0
 
   3:
-    center: [4.0, 1.0]
+    center: [2.85, 0.81]
     yaw_deg: 0.0

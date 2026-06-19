@@ -86,3 +86,107 @@ Results:
 
 Interpretation:
 The full monocular pipeline works on the real rosbag. The main error source is forward distance X, which is expected because the current homography was created from manually guessed world coordinates.
+
+## Homography script refactor and ROI comparison
+
+Refactored the monocular projection and comparison scripts to support configurable input/output paths.
+
+Updated:
+- `scripts/11_export_projected_cones_csv.py`
+  - added `--homography`
+  - added `--output`
+  - added `--disable-roi`
+
+- `scripts/13_compare_mono_vs_stereo.py`
+  - added `--mono`
+  - added `--stereo`
+  - added `--output`
+  - added invalid NaN/inf filtering
+
+- `scripts/17_mono_cone_ros_node.py`
+  - added `--homography`
+  - added `--disable-roi`
+
+Manual homography ROI comparison:
+
+ROI ON:
+- Mono cones: 4741
+- Matched cones: 3999
+- Match rate: 84.3%
+- Mean 2D error: 1.001 m
+- RMSE 2D error: 1.115 m
+- Mean absolute X error: 0.802 m
+- Mean absolute Y error: 0.394 m
+
+ROI OFF:
+- Mono cones: 15150
+- Matched cones: 7011
+- Match rate: 46.3%
+- Mean 2D error: 1.048 m
+- RMSE 2D error: 1.154 m
+- Mean absolute X error: 0.789 m
+- Mean absolute Y error: 0.498 m
+
+Conclusion:
+ROI filtering improves robustness with the current manual homography. Without ROI filtering, more detections are projected, but many are outside the calibrated ground region and matching quality decreases.
+
+## ArUco Calibration Progress
+
+Started the real ArUco-based calibration path to replace the temporary manual homography.
+
+Input calibration image:
+- `data/calibration_images/team_aruco_calib.png`
+
+Marker detection:
+- Script used: `scripts/15_detect_aruco_in_image.py`
+- Detected 4 ArUco markers successfully:
+  - ID 0
+  - ID 1
+  - ID 2
+  - ID 3
+
+Detected marker corner examples:
+- ID 2 around image region `u=1025–1115`, `v=518–549`
+- ID 1 around image region `u=228–306`, `v=512–539`
+- ID 3 around image region `u=1128–1263`, `v=607–660`
+- ID 0 around image region `u=99–212`, `v=592–636`
+
+Team marker layout:
+- Marker size: `0.20 m`
+- Original layout was provided in millimeters.
+- Converted to meters and stored in `config/aruco_markers.yaml`.
+
+Current marker center configuration:
+- ID 1 center: `[0.10, 0.10]`
+- ID 2 center: `[2.85, 0.10]`
+- ID 0 center: `[0.10, 0.81]`
+- ID 3 center: `[2.85, 0.81]`
+
+Created:
+- `scripts/16_compute_homography_from_aruco.py`
+
+The script detects ArUco markers, builds image-to-world correspondences from marker corners, computes a homography, and saves:
+
+- `config/homography_aruco.yaml`
+- `outputs/aruco_homography_debug.png`
+
+ArUco homography result:
+- Number of correspondences: 16
+- Mean reprojection error over all points: `0.043411 m`
+- Mean reprojection error over inliers: `0.017045 m`
+- Max reprojection error: `0.088356 m`
+- Inliers: `8 / 16`
+
+Interpretation:
+The ArUco homography computation works and produces a metric image-to-ground mapping in the team ArUco layout frame. However, this frame is not yet confirmed to be the same as the vehicle/camera frame used by the stereo cone reference.
+
+Current blocker:
+To compare ArUco-based monocular cone positions directly against `/stereo_cone_perception/cones`, we need the transform from the ArUco layout frame to the vehicle/camera ground frame.
+
+Missing information:
+- Vehicle/camera origin relative to ID0 or the ArUco layout
+- Which ArUco axis corresponds to vehicle forward
+- Which ArUco axis/sign corresponds to vehicle left
+
+Next planned step:
+Add a clean ArUco-layout-to-vehicle-frame transform layer once the vehicle origin and axis convention are confirmed.
